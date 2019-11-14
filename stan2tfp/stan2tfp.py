@@ -8,7 +8,7 @@ def gen_code(path_to_stan_code):
     plat = sys.platform
     if not os.path.exists(path_to_stan_code):
       raise FileNotFoundError(path_to_stan_code)
-    call_stan2tfp_cmd = pkg_resources.resource_filename(__name__, f"/bin/{0}-stan2tfp.exe".format(plat))
+    call_stan2tfp_cmd = pkg_resources.resource_filename(__name__, "/bin/{}-stan2tfp.exe".format(plat))
     stan2_tfp_input = path_to_stan_code
     cmd = [call_stan2tfp_cmd, stan2_tfp_input]
     proc = Popen(cmd, stdout=PIPE)
