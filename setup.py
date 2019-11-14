@@ -17,10 +17,10 @@ with open("HISTORY.rst") as history_file:
 
 # with open('requirements.txt') as f:
 requirements = [
-    "pip",
-    "numpy",
-    "tf-nightly",
-    "tfp-nightly",
+    "pip==19.2.2",
+    "numpy==1.16.2",
+    "tf-nightly==2.1.0.dev20191112",
+    "tfp-nightly==0.9.0.dev20191112",
     "bump2version==0.5.11",
     "wheel==0.33.6",
     "watchdog==0.9.0",
