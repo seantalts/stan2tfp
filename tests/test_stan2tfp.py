@@ -38,7 +38,7 @@ class TestStan2tfp(unittest.TestCase):
             data_dict
         )
         mcmc_trace, _ = sampling.run_nuts(model)
-        mu, tau, theta_tilde = [sampling.merge_chains(x.numpy()) for x in mcmc_trace]
+        mu, tau, theta_tilde = [sampling.merge_chains(x) for x in mcmc_trace]
 
         self.assertAlmostEqual(significant_mean(mu), 4, delta=2)
         self.assertAlmostEqual(significant_mean(tau), 3, delta=2)
