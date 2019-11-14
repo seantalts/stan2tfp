@@ -3,6 +3,7 @@ from subprocess import Popen, PIPE
 import os
 import pkg_resources
 import sys
+import tempfile
 
 def gen_code(path_to_stan_code):
     plat = sys.platform
@@ -24,8 +25,6 @@ def save_code(tfp_code, fname):
 def get_model_obj(tfp_code):
     exec_dict = {}
     exec(tfp_code, exec_dict)
-    print(exec_dict.keys())
-    print(exec_dict)
     return exec_dict["model"]
 
 
@@ -33,7 +32,7 @@ def init_model_with_data(model_obj, data_dict):
     return model_obj(**data_dict)
 
 
-def get_model_from_code(tfp_code, data_dict):
+def get_model_from_tfp_code(tfp_code, data_dict):
     model_obj = get_model_obj(tfp_code)
     model = init_model_with_data(model_obj, data_dict)
     return model
@@ -41,9 +40,17 @@ def get_model_from_code(tfp_code, data_dict):
 
 def get_model_from_path(path_to_stan_code, data_dict):
     tfp_code = gen_code(path_to_stan_code)
-    model_obj = get_model_obj(tfp_code)
-    model = init_model_with_data(model_obj, data_dict)
+    model = get_model_from_tfp_code(tfp_code, data_dict)
     return model
+
+def get_model_from_stan_code(stan_code, data_dict):
+    fd, path = tempfile.mkstemp()
+    with open(fd, 'w') as f:
+        f.write(stan_code)
+    model = get_model_from_path(path, data_dict)
+    os.unlink(path)
+    return model
+
 
 
 # """Main module."""
