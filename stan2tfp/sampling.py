@@ -55,7 +55,7 @@ def run_nuts(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
         target_accept_prob=tf.cast(0.8, dtype=dtype),
         # Adapt for the entirety of the trajectory.
         num_adaptation_steps=num_warmup_iters,
-        _step_size_setter_fn=_step_size_setter_fn,
+        step_size_setter_fn=_step_size_setter_fn,
         step_size_getter_fn=lambda pkr: pkr.inner_results.step_size,
         log_accept_prob_getter_fn=lambda pkr: pkr.inner_results.log_accept_ratio,
     )
