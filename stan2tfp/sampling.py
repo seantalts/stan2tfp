@@ -19,25 +19,19 @@ def _step_size_setter_fn(pkr, new_step_size):
 def run_nuts(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
     """Draw samples from the model using NUTS.
     
-    Parameters
-    ----------
-    model : tfd.Distribution  
-        A tfd.Distribution object representing our model.
-        Must have a log_prob, parameter_bijectors and parameter_shapes methods
-    nchain : int, optional
-        Number of chains to sample, by default 4
-    num_main_iters : int, optional
-        The number of samples to draw, by default 1000
-    num_warmup_iters : int, optional
-        The number of warmup iterations, by default 1000
-    
-    Returns
-    -------
-    tuple
-        A tuple containing two elements:
+    :param model: A tfp object representing a model to sample from
+    :type model: tfd.Distribution
+    :param nchain: Number of chains to sample, defaults to 4
+    :type nchain: int, optional
+    :param num_main_iters: The number of samples to draw, defaults to 1000
+    :type num_main_iters: int, optional
+    :param num_warmup_iters: The number of warmup iterations, defaults to 1000
+    :type num_warmup_iters: int, optional
+    :return: Tuple of two elements:
         1. mcmc_trace - a list samples drawn from the model
         2. pkr (previous kernel results) - a dictionary of sampler statistics defined by trace_fn 
-    """    
+    :rtype: tuple
+    """
     initial_states = [
         tf.random.uniform(s, -2, 2, dtype, name="initializer")
         for s in model.parameter_shapes(nchain)
@@ -77,14 +71,9 @@ def run_nuts(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
 def merge_chains(a):
     """merge samples from different chains to a single numpy array
     
-    Parameters
-    ----------
-    a : Tensor
-        samples, shape (n_chains, n_iter, ...)
-    
-    Returns
-    -------
-    ndarray
-        samples, shape (n_chains * n_iter, ...)
+    :param a: samples, shape (n_chains, n_iter, ...)
+    :type a: Tensor
+    :return: samples, shape (n_chains * n_iter, ...)
+    :rtype: ndarray
     """    
     return np.reshape(a, a.shape[0] * a.shape[1] + a.shape[2:])
