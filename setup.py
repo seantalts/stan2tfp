@@ -19,8 +19,9 @@ with open("HISTORY.rst") as history_file:
 requirements = [
     "pip==19.2.2",
     "numpy==1.16.2",
-    "tf-nightly==2.1.0.dev20191112",
-    "tfp-nightly==0.9.0.dev20191112",
+    "gast==0.2.2"
+    "tf-nightly",
+    "tfp-nightly",
     "bump2version==0.5.11",
     "wheel==0.33.6",
     "watchdog==0.9.0",
