@@ -22,6 +22,8 @@ def save_code(tfp_code, fname):
 def get_model_obj(tfp_code):
     exec_dict = {}
     exec(tfp_code, exec_dict)
+    print(exec_dict.keys())
+    print(exec_dict)
     return exec_dict["model"]
 
 
