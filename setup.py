@@ -15,8 +15,22 @@ with open("HISTORY.rst") as history_file:
 #     "Click>=7.0",
 # ]
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+# with open('requirements.txt') as f:
+requirements = [
+    "pip==19.2.3"
+    "numpy>=1.16.2"
+    "tf-nightly"
+    "tfp-nightly"
+    "bump2version==0.5.11"
+    "wheel==0.33.6"
+    "watchdog==0.9.0"
+    "flake8==3.7.8"
+    "tox==3.14.0"
+    "coverage==4.5.4"
+    "Sphinx==1.8.5"
+    "twine==1.14.0"
+    "Click==7.0"
+]
 
 setup_requirements = []
 
