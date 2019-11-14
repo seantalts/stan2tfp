@@ -7,6 +7,6 @@ include README.rst
 recursive-include tests *
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
-include stan2tfp/bin/stan2tfp.exe
+recursive-include stan2tfp/bin *
 
 recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
