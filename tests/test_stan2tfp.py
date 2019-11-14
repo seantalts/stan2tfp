@@ -29,7 +29,7 @@ class TestStan2tfp(unittest.TestCase):
     # def tearDown(self):
     #     """Tear down test fixtures, if any."""
 
-    def test_eight_schools(self):
+    def test_eight_schools_from_path(self):
         data_dict = dict(
             J=8, y=[28, 8, -3, 7, -1, 1, 18, 12], sigma=[15, 10, 16, 11, 9, 11, 10, 18]
         )
@@ -43,17 +43,45 @@ class TestStan2tfp(unittest.TestCase):
         self.assertAlmostEqual(significant_mean(mu), 4, delta=2)
         self.assertAlmostEqual(significant_mean(tau), 3, delta=2)
         self.assertAlmostEqual(significant_mean(theta_tilde), 0.08, delta=0.1)
+    
+    def test_eight_schools_from_stan_code(self):
+        data_dict = dict(
+            J=8, y=[28, 8, -3, 7, -1, 1, 18, 12], sigma=[15, 10, 16, 11, 9, 11, 10, 18]
+        )
+        stan_code = """
+data {
+  int<lower=0> J;
+  real y[J];
+  real<lower=0> sigma[J];
+}
 
-    # def test_command_line_interface(self):
-    #     """Test the CLI."""
-    #     runner = CliRunner()
-    #     result = runner.invoke(cli.main)
-    #     assert result.exit_code == 0
-    #     assert 'stan2tfp.cli.main' in result.output
-    #     help_result = runner.invoke(cli.main, ['--help'])
-    #     assert help_result.exit_code == 0
-    #     assert '--help  Show this message and exit.' in help_result.output
+parameters {
+  real mu;
+  real<lower=0> tau;
+  vector[J] theta_tilde;
+}
 
+transformed parameters {
+  vector[J] theta = mu + tau * theta_tilde;
+}
+
+model {
+  mu ~ normal(0, 5);
+  tau ~ normal(0, 5);
+  theta_tilde ~ normal(0, 1);
+  y ~ normal(theta, sigma);
+}
+        """
+        model = stan2tfp.get_model_from_stan_code(
+            stan_code,
+            data_dict
+        )
+        mcmc_trace, _ = sampling.run_nuts(model)
+        mu, tau, theta_tilde = [sampling.merge_chains(x) for x in mcmc_trace]
+
+        self.assertAlmostEqual(significant_mean(mu), 4, delta=2)
+        self.assertAlmostEqual(significant_mean(tau), 3, delta=2)
+        self.assertAlmostEqual(significant_mean(theta_tilde), 0.08, delta=0.1)
 
 if __name__ == "__main__":
     unittest.main()
