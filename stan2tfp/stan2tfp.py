@@ -2,9 +2,11 @@
 from subprocess import Popen, PIPE
 import os
 import pkg_resources
+import sys
 
 def gen_code(path_to_stan_code):
-    call_stan2tfp_cmd = pkg_resources.resource_filename(__name__, "/bin/stan2tfp.exe")
+    plat = sys.platform
+    call_stan2tfp_cmd = pkg_resources.resource_filename(__name__, f"/bin/{plat}-stan2tfp.exe")
     stan2_tfp_input = path_to_stan_code
     cmd = [call_stan2tfp_cmd, stan2_tfp_input]
     proc = Popen(cmd, stdout=PIPE)
