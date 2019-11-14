@@ -9,6 +9,7 @@ from click.testing import CliRunner
 import numpy as np
 from stan2tfp import stan2tfp, sampling
 from stan2tfp import cli
+import pkg_resources
 
 
 def significant_digit(x):
@@ -33,7 +34,8 @@ class TestStan2tfp(unittest.TestCase):
             J=8, y=[28, 8, -3, 7, -1, 1, 18, 12], sigma=[15, 10, 16, 11, 9, 11, 10, 18]
         )
         model = stan2tfp.get_model_from_path(
-            "/Users/adamhaber/projects/stan2tfp/tests/eight_schools_ncp.stan", data_dict
+            pkg_resources.resource_filename(__name__,"../tests/eight_schools_ncp.stan"),
+            data_dict
         )
         mcmc_trace, _ = sampling.run_nuts(model)
         mu, tau, theta_tilde = [sampling.merge_chains(x) for x in mcmc_trace]
