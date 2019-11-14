@@ -20,7 +20,7 @@ requirements = [
     "pip",
     "numpy",
     "gast==0.2.2",
-    "tf-nightly",
+    "tf-nightly-2.0-preview",
     "tfp-nightly",
     "bump2version==0.5.11",
     "wheel==0.33.6",
