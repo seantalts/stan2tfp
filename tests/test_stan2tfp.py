@@ -33,7 +33,7 @@ class TestStan2tfp(unittest.TestCase):
         data_dict = dict(
             J=8, y=[28, 8, -3, 7, -1, 1, 18, 12], sigma=[15, 10, 16, 11, 9, 11, 10, 18]
         )
-        model = stan2tfp.get_model_from_path(
+        model = stan2tfp.model_from_path(
             pkg_resources.resource_filename(__name__,"../tests/eight_schools_ncp.stan"),
             data_dict
         )
@@ -72,7 +72,7 @@ model {
   y ~ normal(theta, sigma);
 }
         """
-        model = stan2tfp.get_model_from_stan_code(
+        model = stan2tfp.model_from_stan_code(
             stan_code,
             data_dict
         )
