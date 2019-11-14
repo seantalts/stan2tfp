@@ -9,7 +9,7 @@ tfb = tfp.bijectors
 dtype = tf.float64
 
 
-def step_size_setter_fn(pkr, new_step_size):
+def _step_size_setter_fn(pkr, new_step_size):
     return pkr._replace(
         inner_results=pkr.inner_results._replace(step_size=new_step_size)
     )
@@ -17,6 +17,27 @@ def step_size_setter_fn(pkr, new_step_size):
 
 @tf.function(experimental_compile=True)
 def run_nuts(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
+    """Draw samples from the model using NUTS.
+    
+    Parameters
+    ----------
+    model : tfd.Distribution  
+        A tfd.Distribution object representing our model.
+        Must have a log_prob, parameter_bijectors and parameter_shapes methods
+    nchain : int, optional
+        Number of chains to sample, by default 4
+    num_main_iters : int, optional
+        The number of samples to draw, by default 1000
+    num_warmup_iters : int, optional
+        The number of warmup iterations, by default 1000
+    
+    Returns
+    -------
+    tuple
+        A tuple containing two elements:
+        1. mcmc_trace - a list samples drawn from the model
+        2. pkr (previous kernel results) - a dictionary of sampler statistics defined by trace_fn 
+    """    
     initial_states = [
         tf.random.uniform(s, -2, 2, dtype, name="initializer")
         for s in model.parameter_shapes(nchain)
@@ -34,7 +55,7 @@ def run_nuts(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
         target_accept_prob=tf.cast(0.8, dtype=dtype),
         # Adapt for the entirety of the trajectory.
         num_adaptation_steps=num_warmup_iters,
-        step_size_setter_fn=step_size_setter_fn,
+        _step_size_setter_fn=_step_size_setter_fn,
         step_size_getter_fn=lambda pkr: pkr.inner_results.step_size,
         log_accept_prob_getter_fn=lambda pkr: pkr.inner_results.log_accept_ratio,
     )
@@ -54,4 +75,16 @@ def run_nuts(model, nchain=4, num_main_iters=1000, num_warmup_iters=1000):
 
 
 def merge_chains(a):
+    """merge samples from different chains to a single numpy array
+    
+    Parameters
+    ----------
+    a : Tensor
+        samples, shape (n_chains, n_iter, ...)
+    
+    Returns
+    -------
+    ndarray
+        samples, shape (n_chains * n_iter, ...)
+    """    
     return np.reshape(a, a.shape[0] * a.shape[1] + a.shape[2:])
