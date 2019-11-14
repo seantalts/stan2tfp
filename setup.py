@@ -17,9 +17,9 @@ with open("HISTORY.rst") as history_file:
 
 # with open('requirements.txt') as f:
 requirements = [
-    "pip"
-    "numpy"
-    "tf-nightly"
+    "pip",
+    "numpy",
+    "tf-nightly",
     "tfp-nightly"
 ]
 #     "bump2version==0.5.11"
