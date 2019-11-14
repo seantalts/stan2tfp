@@ -34,8 +34,10 @@ class TestStan2tfp(unittest.TestCase):
             J=8, y=[28, 8, -3, 7, -1, 1, 18, 12], sigma=[15, 10, 16, 11, 9, 11, 10, 18]
         )
         model = stan2tfp.model_from_path(
-            pkg_resources.resource_filename(__name__,"../tests/eight_schools_ncp.stan"),
-            data_dict
+            pkg_resources.resource_filename(
+                __name__, "../tests/eight_schools_ncp.stan"
+            ),
+            data_dict,
         )
         mcmc_trace, _ = sampling.run_nuts(model)
         mu, tau, theta_tilde = [sampling.merge_chains(x) for x in mcmc_trace]
@@ -43,7 +45,7 @@ class TestStan2tfp(unittest.TestCase):
         self.assertAlmostEqual(significant_mean(mu), 4, delta=2)
         self.assertAlmostEqual(significant_mean(tau), 3, delta=2)
         self.assertAlmostEqual(significant_mean(theta_tilde), 0.08, delta=0.1)
-    
+
     def test_eight_schools_from_stan_code(self):
         data_dict = dict(
             J=8, y=[28, 8, -3, 7, -1, 1, 18, 12], sigma=[15, 10, 16, 11, 9, 11, 10, 18]
@@ -72,16 +74,14 @@ model {
   y ~ normal(theta, sigma);
 }
         """
-        model = stan2tfp.model_from_stan_code(
-            stan_code,
-            data_dict
-        )
+        model = stan2tfp.model_from_stan_code(stan_code, data_dict)
         mcmc_trace, _ = sampling.run_nuts(model)
         mu, tau, theta_tilde = [sampling.merge_chains(x) for x in mcmc_trace]
 
         self.assertAlmostEqual(significant_mean(mu), 4, delta=2)
         self.assertAlmostEqual(significant_mean(tau), 3, delta=2)
         self.assertAlmostEqual(significant_mean(theta_tilde), 0.08, delta=0.1)
+
 
 if __name__ == "__main__":
     unittest.main()

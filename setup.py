@@ -30,7 +30,7 @@ requirements = [
     "coverage==4.5.4",
     "Sphinx==1.8.5",
     "twine==1.14.0",
-    "Click==7.0"
+    "Click==7.0",
 ]
 
 setup_requirements = []

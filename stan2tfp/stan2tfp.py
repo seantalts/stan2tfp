@@ -5,11 +5,14 @@ import pkg_resources
 import sys
 import tempfile
 
+
 def gen_tfp_code(path_to_stan_code):
     plat = sys.platform
     if not os.path.exists(path_to_stan_code):
-      raise FileNotFoundError(path_to_stan_code)
-    call_stan2tfp_cmd = pkg_resources.resource_filename(__name__, "/bin/{}-stan2tfp.exe".format(plat))
+        raise FileNotFoundError(path_to_stan_code)
+    call_stan2tfp_cmd = pkg_resources.resource_filename(
+        __name__, "/bin/{}-stan2tfp.exe".format(plat)
+    )
     stan2_tfp_input = path_to_stan_code
     cmd = [call_stan2tfp_cmd, stan2_tfp_input]
     proc = Popen(cmd, stdout=PIPE)
@@ -43,14 +46,14 @@ def model_from_path(path_to_stan_code, data_dict):
     model = model_from_tfp_code(tfp_code, data_dict)
     return model
 
+
 def model_from_stan_code(stan_code, data_dict):
     fd, path = tempfile.mkstemp()
-    with open(fd, 'w') as f:
+    with open(fd, "w") as f:
         f.write(stan_code)
     model = model_from_path(path, data_dict)
     os.unlink(path)
     return model
-
 
 
 # """Main module."""
