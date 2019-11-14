@@ -40,4 +40,4 @@ def get_model_from_path(path_to_stan_code, data_dict):
     return model
 
 
-"""Main module."""
+# """Main module."""
