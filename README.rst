@@ -3,8 +3,8 @@ stan2tfp
 ========
 
 
-.. image:: https://img.shields.io/pypi/v/stan2tfp.svg
-        :target: https://pypi.python.org/pypi/stan2tfp
+.. .. image:: https://img.shields.io/pypi/v/stan2tfp.svg
+..         :target: https://pypi.python.org/pypi/stan2tfp
 
 .. image:: https://img.shields.io/travis/adamhaber/stan2tfp.svg
         :target: https://travis-ci.org/adamhaber/stan2tfp
@@ -13,20 +13,28 @@ stan2tfp
         :target: https://stan2tfp.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
+The new Stan compiler features a TensorFlow Probability backend, translating Stan programs to python code. 
+stan2tfp is a lightweight python wrapper around this functionality, allowing users to:
 
 
+* call the compiler (emitting TFP code)
+* run the code (creating a model object in the current namespace)
+* sample the model (using TFP's NUTS)
 
-Python Boilerplate contains all the boilerplate you need to create a Python package.
+without leaving the notebook or their favorite IDE.
+
+The new Stan compiler and the TFP backend are under active development. Currently only a small subset of Stan's functionality is supported. For a list of supported distributions, see ...
+
+Installation
+============
+
+...
 
 
-* Free software: MIT license
-* Documentation: https://stan2tfp.readthedocs.io.
+Example
+=======
 
-
-Features
---------
-
-* TODO
+...
 
 Credits
 -------
