@@ -13,7 +13,8 @@ stan2tfp
         :target: https://stan2tfp.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-The `new Stan compiler <https://github.com/stan-dev/stanc3>`_ features a TensorFlow Probability backend, translating Stan programs to python code. 
+The new `Stan compiler <https://github.com/stan-dev/stanc3>`_ features a TensorFlow Probability backend, translating Stan programs to python code. 
+
 stan2tfp is a lightweight python wrapper around this functionality, allowing users to:
 
 
@@ -21,9 +22,9 @@ stan2tfp is a lightweight python wrapper around this functionality, allowing use
 * run the code (creating a model object in the current namespace)
 * sample the model (using TFP's NUTS)
 
-without leaving the notebook or their favorite IDE.
+... without leaving the notebook or their favorite IDE.
 
-The new Stan compiler and the TFP backend are under active development. Currently only a small subset of Stan's functionality is supported. For a list of supported distributions, see ...
+The new compiler and the TFP backend are under active development. Currently only a small subset of Stan's functionality is supported. For a list of supported distributions, see ...
 
 Installation
 ============
