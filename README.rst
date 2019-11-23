@@ -13,7 +13,7 @@ stan2tfp
         :target: https://stan2tfp.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-The new Stan compiler features a TensorFlow Probability backend, translating Stan programs to python code. 
+The `new Stan compiler <https://github.com/stan-dev/stanc3>`_ features a TensorFlow Probability backend, translating Stan programs to python code. 
 stan2tfp is a lightweight python wrapper around this functionality, allowing users to:
 
 
