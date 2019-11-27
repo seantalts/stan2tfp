@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from subprocess import Popen, PIPE
+from subprocess import run, PIPE
 import os
 import pkg_resources
 import sys
@@ -24,18 +24,20 @@ def generate_tfp_code(stan_code_path):
     FileNotFoundError
         path to .stan file doesn't exists 
     """
-    plat = sys.platform
     if not os.path.exists(stan_code_path):
-        raise FileNotFoundError(path_to_stan_code)
+        raise FileNotFoundError(stan_code_path)
+    
+    plat = sys.platform
+    if plat not in ['darwin', 'linux', 'win32']:
+        raise OSError("OS {} is not supported".format(plat))
         
     call_stan2tfp_cmd = pkg_resources.resource_filename(
         __name__, "/bin/{}-stan2tfp.exe".format(plat)
-    ) # TOMER: I didn't fully understand what is this used for, but: 1. does 'exe' format will run on linux? 2. what happens if the user's plattform is not supported? I think you want to handle this error, no?
-    stan2_tfp_input = stan_code_path # TOMER: Why is this necessary?
-    cmd = [call_stan2tfp_cmd, stan2_tfp_input]
-    proc = Popen(cmd, stdout=PIPE)
-    tfp_code = proc.communicate()[0] # TOMER: Consider using subprocess.run() or subprocess.check_output(), it seems like these are more updated functions that will save you some lines of code and handle errors better (I think). look here: https://docs.python.org/3/library/subprocess.html#subprocess.run (they also talk there about security considerations)
-    
+    )
+
+    cmd = [call_stan2tfp_cmd, stan_code_path]
+    proc = run(cmd, stdout=PIPE, stderr=PIPE)
+    tfp_code = proc.stdout
     return tfp_code
 
 
@@ -111,12 +113,12 @@ def model_from_tfp_code(tfp_code, data_dict):
     return model
 
 
-def model_from_path(path_to_stan_code, data_dict):
+def model_from_path(stan_code_path, data_dict):
     """create a tfp object nuts can sample from a .stan file and a data dictionary
     
     Parameters
     ----------
-    path_to_stan_code : string
+    stan_code_path : string
         path to the .stan file to compile
     data_dict : dictionary
         data for the model
@@ -126,7 +128,7 @@ def model_from_path(path_to_stan_code, data_dict):
     tfd.Distribution
         an instantiated model with all the methods necessary for sampling
     """    
-    tfp_code = gen_tfp_code(path_to_stan_code)
+    tfp_code = generate_tfp_code(stan_code_path)
     model = model_from_tfp_code(tfp_code, data_dict)
     return model
 
