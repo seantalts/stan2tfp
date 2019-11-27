@@ -5,4 +5,4 @@ __author__ = """Adam Haber"""
 __email__ = "adamhaber@gmail.com"
 __version__ = "0.1.0"
 
-from stan2tfp import *
+from stan2tfp.stan2tfp import Stan2tfp

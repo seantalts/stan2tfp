@@ -7,8 +7,7 @@
 import unittest
 from click.testing import CliRunner
 import numpy as np
-from stan2tfp import stan2tfp, sampling
-from stan2tfp import cli
+from stan2tfp import Stan2tfp
 import pkg_resources
 
 
@@ -23,24 +22,18 @@ def significant_mean(x):
 class TestStan2tfp(unittest.TestCase):
     """Tests for `stan2tfp` package."""
 
-    # def setUp(self):
-    #     """Set up test fixtures, if any."""
-
-    # def tearDown(self):
-    #     """Tear down test fixtures, if any."""
-
     def test_eight_schools_from_path(self):
         data_dict = dict(
             J=8, y=[28, 8, -3, 7, -1, 1, 18, 12], sigma=[15, 10, 16, 11, 9, 11, 10, 18]
         )
-        model = stan2tfp.model_from_path(
+        model = Stan2tfp(stan_file_path=
             pkg_resources.resource_filename(
                 __name__, "../tests/eight_schools_ncp.stan"
             ),
-            data_dict,
+            data_dict=data_dict
         )
-        mcmc_trace, _ = sampling.run_nuts(model)
-        mu, tau, theta_tilde = [sampling.merge_chains(x) for x in mcmc_trace]
+        mcmc_trace, _ = model.sample()
+        mu, tau, theta_tilde = [model.merge_chains(x) for x in mcmc_trace]
 
         self.assertAlmostEqual(significant_mean(mu), 4, delta=2)
         self.assertAlmostEqual(significant_mean(tau), 3, delta=2)
@@ -74,9 +67,12 @@ model {
   y ~ normal(theta, sigma);
 }
         """
-        model = stan2tfp.model_from_stan_code(stan_code, data_dict)
-        mcmc_trace, _ = sampling.run_nuts(model)
-        mu, tau, theta_tilde = [sampling.merge_chains(x) for x in mcmc_trace]
+        model = Stan2tfp(stan_model_code=
+            stan_code,
+            data_dict=data_dict
+        )
+        mcmc_trace, _ = model.sample()
+        mu, tau, theta_tilde = [model.merge_chains(x) for x in mcmc_trace]
 
         self.assertAlmostEqual(significant_mean(mu), 4, delta=2)
         self.assertAlmostEqual(significant_mean(tau), 3, delta=2)
